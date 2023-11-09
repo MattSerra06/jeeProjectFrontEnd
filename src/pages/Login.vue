@@ -1,0 +1,71 @@
+<template>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card>
+          <v-card-title class="text-h5">Connexion</v-card-title>
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                  v-model="login.username"
+                  label="Nom d'utilisateur"
+                  prepend-icon="mdi-account"
+                  required
+              ></v-text-field>
+              <v-text-field
+                  v-model="login.password"
+                  label="Mot de passe"
+                  :type="!showPassword ? 'password' : 'text'"
+                  prepend-icon="mdi-lock"
+                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append-inner="() => (showPassword = !showPassword)"
+                  required
+              ></v-text-field>
+              <div class="text-center">
+                <!-- Centrer le contenu à l'aide de la classe 'text-center' -->
+                <v-btn
+                    color="primary"
+                    class="mr-4"
+                    @click="submitLogin"
+                >
+                  Connexion
+                </v-btn>
+                <v-btn text @click="redirectToRegister">Créer un compte</v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      login: {
+        username: '',
+        password: ''
+      },
+      showPassword: false,
+    };
+  },
+  methods: {
+    togglePasswordVisibility(event) {
+      const iconClass = 'v-icon notranslate mdi-eye'; // ou 'mdi-eye-off' selon le cas
+      if (event.target.className.includes(iconClass)) {
+        this.showPassword = !this.showPassword;
+      }
+    },
+    submitLogin() {
+      // Ici, vous traiterez la connexion, par exemple en appelant une API.
+      console.log('Tentative de connexion avec:', this.login);
+    },
+    redirectToRegister() {
+      // Redirection vers la page d'inscription (à implémenter avec le routeur Vue)
+      this.$router.push('/register');
+    }
+  }
+}
+</script>
