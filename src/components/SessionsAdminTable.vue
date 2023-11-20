@@ -47,14 +47,15 @@ export default {
       sortBy: [{key: 'id', order: 'asc'}],
       headers: [
         {title: 'Id', key: 'id'},
-        {title: 'Code', key: 'code'},
+        {title: 'Code', key: 'codeSession'},
         {title: 'Date', key: 'date'},
         {title: 'Heure de début', key: 'heureDebut'},
         {title: 'Heure de fin', key: 'heureFin'},
-        {title: 'Discipline', key: 'discipline'},
-        {title: 'Site', key: 'site'},
+        {title: 'Discipline', key: 'disciplineName'},
+        {title: 'Epreuve',key:'epreuveName'},
+        {title: 'Site', key: 'siteName'},
         {title: 'Description', key: 'description'},
-        {title: 'Type session', key: 'sessionType'},
+        {title: 'Type session', key: 'typeSession'},
       ],
       itemKey: 'id', // Remplacez 'id' par la clé unique de votre objet site
       selectedSession: null,
@@ -84,28 +85,30 @@ export default {
         const index = this.sessions.findIndex(session => session.id === selectedId);
         console.log(this.sessions.at(index));
         if (index > -1) {
-          this.sessions.at(index).code = data.sessionCode;
+          this.sessions.at(index).codeSession = data.sessionCode;
           this.sessions.at(index).date = data.sessionDate;
           this.sessions.at(index).heureDebut = data.sessionHeureDebut;
           this.sessions.at(index).heureFin = data.sessionHeureFin;
-          this.sessions.at(index).discipline = data.discipline;
+          this.sessions.at(index).disciplineName = data.discipline;
+          this.sessions.at(index).epreuveName = data.epreuveName;
           this.sessions.at(index).site = data.site;
           this.sessions.at(index).description = data.description;
-          this.sessions.at(index).sessionType = data.sessionType;
+          this.sessions.at(index).typeSession = data.sessionType;
         }
       }
     },
     createSession(data){
       const session ={
         id:100,
-        code : data.code,
+        codeSession : data.code,
         date : data.date,
         heureDebut : data.sessionHeureDebut,
         heureFin : data.sessionHeureFin,
-        discipline : data.discipline,
-        site : data.site,
+        disciplineName : data.discipline,
+        epreuveName : data.epreuveName,
+        siteName : data.site,
         description : data.description,
-        sessionType : data.sessionType,
+        typeSession : data.sessionType,
       }
       this.sessions.push(session);
     },

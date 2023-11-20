@@ -50,9 +50,9 @@ export default {
       sortBy: [{key: 'id', order: 'asc'}],
       headers: [
         {title: 'Id', key: 'id'},
-        {title: 'Nom', key: 'name'},
-        {title: 'Ville', key: 'city'},
-        {title: 'Catégorie', key: 'category'},
+        {title: 'Nom', key: 'nom'},
+        {title: 'Ville', key: 'ville'},
+        {title: 'Catégorie', key: 'categorie'},
       ],
       itemKey: 'id', // Remplacez 'id' par la clé unique de votre objet site
       selectedSite: null,
@@ -79,18 +79,18 @@ export default {
         const index = this.sites.findIndex(site => site.id === selectedId);
         console.log(this.sites.at(index));
         if (index > -1) {
-          this.sites.at(index).name = data.siteName;
-          this.sites.at(index).city = data.siteCity;
-          this.sites.at(index).category = data.siteCategory;
+          this.sites.at(index).nom = data.siteName;
+          this.sites.at(index).ville = data.siteCity;
+          this.sites.at(index).categorie = data.siteCategory;
         }
       }
     },
     createSite(data) { //Doit créer l'objet sur l'api et recuperer l'objet créer (l'id genere par la base sql)
       const site = {
         id: 100,
-        name: data.siteName,
-        city: data.siteCity,
-        category: data.siteCategory
+        nom: data.siteName,
+        ville: data.siteCity,
+        categorie: data.siteCategory
       };
       this.sites.push(site);
   },

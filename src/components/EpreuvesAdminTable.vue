@@ -46,8 +46,8 @@ export default {
       sortBy: [{key: 'id', order: 'asc'}],
       headers: [
         {title: 'Id', key: 'id'},
-        {title: 'Discipline', key: 'discipline'},
-        {title: 'Nom', key: 'name'},
+        {title: 'Discipline', key: 'disciplineNom'},
+        {title: 'Nom', key: 'nom'},
       ],
       itemKey: 'id', // Remplacez 'id' par la clé unique de votre objet site
       selectedEpreuve: null,
@@ -77,16 +77,16 @@ export default {
         const selectedId = this.selectedEpreuve[0];
         const index = this.epreuves.findIndex(epreuve => epreuve.id === selectedId);
         if (index > -1) {
-          this.epreuves.at(index).discipline = data.disciplineName;
-          this.epreuves.at(index).name = data.epreuveName;
+          this.epreuves.at(index).disciplineNom = data.disciplineName;
+          this.epreuves.at(index).nom = data.epreuveName;
         }
       }
     },
     createEpreuve(data) { //Doit créer l'objet sur l'api et recuperer l'objet créer (l'id genere par la base sql)
       const epreuve = {
         id: 100,
-        discipline: data.disciplineName,
-        name:data.epreuveName,
+        disciplineNom: data.disciplineName,
+        nom:data.epreuveName,
       };
       this.epreuves.push(epreuve);
     },

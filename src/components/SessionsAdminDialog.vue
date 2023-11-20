@@ -11,6 +11,7 @@
           <v-text-field v-model="sessionHeureDebut" label="Heure de début" type="time"></v-text-field>
           <v-text-field v-model="sessionHeureFin" label="Heure de Fin" type="time"></v-text-field>
           <v-autocomplete v-model="discipline" :items="disciplines" label="Discipline"></v-autocomplete>
+          <v-autocomplete v-model="epreuve" :items="epreuves" label="Epreuve"></v-autocomplete>
           <v-autocomplete v-model="site" :items="sites" label="Site"></v-autocomplete>
           <v-text-field v-model="description" label="Description"></v-text-field>
           <v-select v-model="sessionType" :items="types" label="Type de session"></v-select>
@@ -39,10 +40,12 @@ export default {
       sessionHeureDebut: '', // Variable pour stocker la catégorie du site
       sessionHeureFin: '',
       discipline: '',
+      epreuve:'',
       site: '',
       description: '',
       sessionType: '',
       disciplines: ['Athlétisme', 'Judo', 'Basketball'],
+      epreuves: ["100m","200m"],
       sites: ['Piscine Louis II', 'Gymnase Jean Pascal'],
       types: ['Qualifications', 'Médailles'],
     };

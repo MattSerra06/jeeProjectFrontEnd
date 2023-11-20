@@ -46,7 +46,7 @@ export default {
       sortBy: [{key: 'id', order: 'asc'}],
       headers: [
         {title: 'Id', key: 'id'},
-        {title: 'Nom', key: 'name'},
+        {title: 'Nom', key: 'nom'},
         {title: 'Est paralympique', key: 'estParalympique'},
       ],
       itemKey: 'id', // Remplacez 'id' par la clé unique de votre objet site
@@ -77,7 +77,7 @@ export default {
         const selectedId = this.selectedDiscipline[0];
         const index = this.disciplines.findIndex(discipline => discipline.id === selectedId);
         if (index > -1) {
-          this.disciplines.at(index).name = data.disciplineName;
+          this.disciplines.at(index).nom = data.disciplineName;
           this.disciplines.at(index).estParalympique = data.estParalympique;
         }
       }
@@ -85,7 +85,7 @@ export default {
     createDiscipline(data) { //Doit créer l'objet sur l'api et recuperer l'objet créer (l'id genere par la base sql)
       const discipline = {
         id: 100,
-        name: data.disciplineName,
+        nom: data.disciplineName,
         estParalympique: data.estParalympique,
       };
       this.disciplines.push(discipline);
