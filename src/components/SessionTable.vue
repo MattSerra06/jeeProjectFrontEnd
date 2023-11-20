@@ -25,11 +25,15 @@ export default {
     return {
       sortBy: [{ key: 'date', order: 'asc'}],
       headers: [
-        { title: 'Date', key: 'date' },
-        { title: 'Horaire', key: 'horaire' },
-        { title: 'Lieu', key: 'lieu' },
-        { title: 'Épreuve', key: 'epreuve' },
-        { title: 'Genre', key: 'genre' }
+        {title: 'Code', key: 'codeSession'},
+        {title: 'Date', key: 'date'},
+        {title: 'Heure de début', key: 'heureDebut'},
+        {title: 'Heure de fin', key: 'heureFin'},
+        {title: 'Discipline', key: 'disciplineName'},
+        {title: 'Epreuve', key:'epreuveName'},
+        {title: 'Site', key: 'siteName'},
+        {title: 'Description', key: 'description'},
+        {title: 'Type session', key: 'typeSession'},
       ],
     };
   }

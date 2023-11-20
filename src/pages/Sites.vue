@@ -12,9 +12,9 @@
           <v-row no-gutters>
             <!-- Si index est pair, l'image est à droite, donc le texte est à gauche -->
             <v-col cols="7" v-if="index % 2 === 0">
-              <v-card-title class="headline">{{ site.name }}</v-card-title>
-              <v-card-subtitle style="color:#353b48">{{ site.city }}</v-card-subtitle>
-              <v-card-text>{{ site.category }}</v-card-text>
+              <v-card-title class="headline">{{ site.nom }}</v-card-title>
+              <v-card-subtitle style="color:#353b48">{{ site.ville }}</v-card-subtitle>
+              <v-card-text>{{ site.categorie }}</v-card-text>
 
             </v-col>
 
@@ -29,9 +29,9 @@
 
             <!-- Si index est impair, l'image est à gauche, donc le texte est à droite -->
             <v-col cols="7" v-if="index % 2 !== 0">
-              <v-card-title class="headline">{{ site.name }}</v-card-title>
-              <v-card-subtitle style="color:#353b48">{{ site.city }}</v-card-subtitle>
-              <v-card-text>{{ site.category }}</v-card-text>
+              <v-card-title class="headline">{{ site.nom }}</v-card-title>
+              <v-card-subtitle style="color:#353b48">{{ site.ville }}</v-card-subtitle>
+              <v-card-text>{{ site.categorie}}</v-card-text>
             </v-col>
           </v-row>
         </v-card>
@@ -56,6 +56,7 @@ import siteBackground12 from '@/assets/sites_background/Fitz - 12.png';
 import siteBackground13 from '@/assets/sites_background/Fitz - 13.png';
 import siteBackground14 from '@/assets/sites_background/Fitz - 14.png';
 import siteBackground15 from '@/assets/sites_background/Fitz - 15.png';
+import axios from "axios";
 
 export default {
   data() {
@@ -77,39 +78,21 @@ export default {
         siteBackground14,
         siteBackground15,
       ],
-      olympicSites: [
-        {id: 1, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 2, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 3, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 4, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 5, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 6, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 7, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 8, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 9, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 10, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 11, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 12, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 13, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 14, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 15, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 16, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 17, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 18, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 19, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 20, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 21, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 22, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 23, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 24, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 25, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 26, name: "Louis 2", city: "Paris", category: "Gymnase"},
-        {id: 27, name: "Pierre Menes", city: "Mougins", category: "Stade"},
-        {id: 28, name: "Louis 2", city: "Paris", category: "Gymnase"},
-      ],
+      olympicSites: [],
     };
   },
   methods: {
+    loadSites() {
+      axios.get('http://localhost:3001/site') // Remplacez par l'URL de votre API
+          .then(response => {
+            this.olympicSites = response.data;
+            console.log(response.data);
+            console.log(this.olympicSites);
+          })
+          .catch(error => {
+            console.error('Erreur lors du chargement des sites:', error);
+          });
+    },
     getColClasses(index) {
       // Change la position du texte de gauche à droite
       return index % 2 === 0 ? 'text-md-left' : 'offset-md-6 text-md-right';
@@ -121,6 +104,9 @@ export default {
     getImagePath(index) {
       return this.siteBackgroundImages[index % this.siteBackgroundImages.length];
     },
+  },
+  mounted() {
+    this.loadSites();
   },
 };
 </script>

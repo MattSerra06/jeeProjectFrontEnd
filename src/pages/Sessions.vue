@@ -1,40 +1,26 @@
 <template>
   <div className="session">
-    <slide-group @select-discipline="setSelectedDiscipline"></slide-group>
-    <session-table :sessions="sessions" class="session-table"></session-table>
+    <slide-group :disciplines="disciplines" @select-discipline="setSelectedDiscipline"></slide-group>
+    <session-table :sessions="filteredSessions" class="session-table"></session-table>
   </div>
 </template>
 
 <script>
 import SlideGroup from "@/components/SlideGroup.vue";
 import SessionTable from "@/components/SessionTable.vue";
+import axios from "axios";
 
 export default {
   name: 'Session',
   components: {
-    'slide-group' :SlideGroup,
-    'session-table' :SessionTable,
+    'slide-group': SlideGroup,
+    'session-table': SessionTable,
   },
   data() {
     return {
+      disciplines: [],
       // Les données des sessions
-      sessions: [
-        {
-          date: '29/10/2023',
-          horaire: '11h-12h',
-          lieu: 'Stade Louis II',
-          epreuve: '100m',
-          genre: 'Homme',
-        },
-        {
-          date: '29/10/2023',
-          horaire: '14h-15h',
-          lieu: 'Stade Louis II',
-          epreuve: '400m',
-          genre: 'Femme',
-        },
-        // Ajoutez d'autres sessions selon vos besoins
-      ],
+      sessions: [],
       // La discipline sélectionnée
       selectedDiscipline: null,
     };
@@ -43,19 +29,37 @@ export default {
     setSelectedDiscipline(discipline) {
       this.selectedDiscipline = discipline;
     },
+    loadSites() {
+      axios.get('http://localhost:3001/session') // Remplacez par l'URL de votre API
+          .then(response => {
+            this.sessions = response.data;
+          })
+          .catch(error => {
+            console.error('Erreur lors du chargement des sites:', error);
+          });
+      axios.get('http://localhost:3001/discipline') // Remplacez par l'URL de votre API
+          .then(response => {
+            this.disciplines = response.data;
+          })
+          .catch(error => {
+            console.error('Erreur lors du chargement des sites:', error);
+          });
+    },
   },
   computed: {
     filteredSessions() {
       if (!this.selectedDiscipline) {
-        // Si aucune discipline n'est sélectionnée, retournez toutes les sessions
         return this.sessions;
       }
-      // Filtrer les sessions en fonction de la discipline sélectionnée
-      return this.sessions.filter(session => session.genre === this.selectedDiscipline);
-    },
+      return this.sessions.filter(session => session.disciplineName === this.selectedDiscipline.nom);
+    }
   },
-  // Vous pouvez ajouter des données, des méthodes, etc., si nécessaire
-};
+  mounted() {
+    this.loadSites();
+  },
+// Vous pouvez ajouter des données, des méthodes, etc., si nécessaire
+}
+;
 </script>
 
 <style scoped>
@@ -63,6 +67,7 @@ export default {
 .session {
   padding: 20px;
 }
+
 .session-table {
   margin-top: 20px; /* Ajoute de l'espace en haut de la table */
 }

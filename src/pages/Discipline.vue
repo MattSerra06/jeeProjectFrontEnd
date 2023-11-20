@@ -16,21 +16,40 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       disciplines: [
-        {
-          name: 'Natation',
-          events: ['50m nage libre', '100m nage libre', '200m quatre nages']
-        },
-        {
-          name: 'Athlétisme',
-          events: ['100m', 'Marathon', 'Saut en longueur']
-        },
-        // Ajoutez d'autres disciplines ici
       ],
     };
+  },
+  methods: {
+    loadSites() {
+      axios.get('http://localhost:3001/epreuve/disciplines')
+          .then(response => {
+            const groupedByDiscipline = response.data.reduce((acc, epreuve) => {
+              // Si la discipline n'est pas encore dans l'accumulateur, l'ajouter
+              if (!acc[epreuve.disciplineNom]) {
+                acc[epreuve.disciplineNom] = { name: epreuve.disciplineNom, events: [] };
+              }
+              // Ajouter l'épreuve à la liste des épreuves de la discipline
+              acc[epreuve.disciplineNom].events.push(epreuve.nom);
+              return acc;
+            }, {});
+
+            // Transformer l'objet en tableau
+            this.disciplines = Object.values(groupedByDiscipline);
+            console.log(this.disciplines);
+          })
+          .catch(error => {
+            console.error('Erreur lors du chargement des sites:', error);
+          });
+    },
+  },
+  mounted() {
+    this.loadSites();
   },
 };
 </script>
