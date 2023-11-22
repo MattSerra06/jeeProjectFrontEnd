@@ -6,7 +6,7 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-autocomplete v-model="disciplineName" :items="disciplines" label="Discipline"></v-autocomplete>
+          <v-text-field v-model="disciplineName" label="Discipline"></v-text-field>
           <v-select v-model="estParalympique" :items="estParalympiqueChoix" label="Est paralympique"></v-select>
         </v-form>
       </v-card-text>
@@ -30,9 +30,8 @@ export default {
   data() {
     return {
       disciplineName : '',
-      estParalympique :'',
-      disciplines: ["Natation","Athlétisme"], // Variable pour stocker le nom du site
-      estParalympiqueChoix: ['Oui','Non'], // Variable pour stocker la ville du site
+      estParalympique :'', // Variable pour stocker le nom du site
+      estParalympiqueChoix: ['True','False'], // Variable pour stocker la ville du site
     };
   },
   methods: {

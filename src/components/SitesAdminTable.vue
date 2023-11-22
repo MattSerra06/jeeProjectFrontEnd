@@ -75,26 +75,23 @@ export default {
   },
   methods: {
     updateSelectedSite(data) {
-      console.log(data);
       if (this.selectedSite && this.selectedSite.length > 0) {
         const selectedId = this.selectedSite[0];
-        const index = this.sites.findIndex(site => site.id === selectedId);
-        if (index > -1) {
-          const newSite = {
-            nom: data.siteName,
-            ville: data.siteCity,
-            categorie: data.siteCategory.toUpperCase().replace(/\s+/g, '_')
-          };
-          axios.put('http://localhost:3001/site/'+selectedId, newSite)
-              .then(response => {
-                this.sites.at(index).nom=response.data.nom;
-                this.sites.at(index).ville=response.data.ville;
-                this.sites.at(index).categorie=response.data.categorie;
-              })
-              .catch(error => {
-                console.error('Erreur lors de la création du site:', error);
-              });
-        }
+        const updatedSite = {
+          nom: data.siteName,
+          ville: data.siteCity,
+          categorie: data.siteCategory.toUpperCase().replace(/\s+/g, '_')
+        };
+        axios.put(`http://localhost:3001/site/${selectedId}`, updatedSite)
+            .then(response => {
+              const index = this.sites.findIndex(site => site.id === selectedId);
+              if (index > -1) {
+                this.sites.splice(index, 1, response.data);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la modification du site:', error);
+            });
       }
     },
 
