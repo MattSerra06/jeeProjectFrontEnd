@@ -10,8 +10,8 @@
           <v-text-field v-model="sessionDate" label="Date de la session" type="date"></v-text-field>
           <v-text-field v-model="sessionHeureDebut" label="Heure de début" type="time"></v-text-field>
           <v-text-field v-model="sessionHeureFin" label="Heure de Fin" type="time"></v-text-field>
-          <v-autocomplete v-model="discipline" :items="disciplines" label="Discipline"></v-autocomplete>
-          <v-autocomplete v-model="epreuve" :items="epreuves" label="Epreuve"></v-autocomplete>
+          <v-autocomplete v-model="discipline" :items="disciplines" label="Discipline" @change="onDisciplineChange"></v-autocomplete>
+          <v-autocomplete v-model="epreuve" :items="epreuves" label="Epreuve" :disabled="epreuves.length === 0"></v-autocomplete>
           <v-autocomplete v-model="site" :items="sites" label="Site"></v-autocomplete>
           <v-text-field v-model="description" label="Description"></v-text-field>
           <v-select v-model="sessionType" :items="types" label="Type de session"></v-select>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     dialogTitle: {
@@ -44,13 +46,57 @@ export default {
       site: '',
       description: '',
       sessionType: '',
-      disciplines: ['Athlétisme', 'Judo', 'Basketball'],
-      epreuves: ["100m","200m"],
-      sites: ['Piscine Louis II', 'Gymnase Jean Pascal'],
-      types: ['Qualifications', 'Médailles'],
+      disciplines: [],
+      epreuves: [],
+      sites: [],
+      types: ["Qualifications","Médailles"],
     };
   },
+  watch: {
+    discipline(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.onDisciplineChange();
+      }
+    }
+  },
   methods: {
+    fetchDisciplines() {
+      axios.get('http://localhost:3001/discipline')
+          .then(response => {
+            // Remplissez le tableau 'disciplines' avec les noms des disciplines
+            this.disciplines = response.data.map(discipline => discipline.nom);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des disciplines:', error);
+          });
+    },
+    onDisciplineChange() {
+      if (this.discipline) {
+        this.fetchEpreuvesByDiscipline(this.discipline);
+      } else {
+        this.epreuves = [];
+      }
+    },
+    fetchEpreuvesByDiscipline(disciplineName) {
+      axios.get(`http://localhost:3001/epreuve/discipline/${disciplineName}`)
+          .then(response => {
+            this.epreuves = response.data.map(epreuve => epreuve.nom);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des épreuves:', error);
+            this.epreuves = [];
+          });
+    },
+    fetchSites() {
+      axios.get('http://localhost:3001/site')
+          .then(response => {
+            // Supposons que l'API retourne un champ 'nom' pour chaque site
+            this.sites = response.data.map(site => site.nom);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des sites:', error);
+          });
+    },
     // Émettre un événement pour fermer le dialogue
     closeDialog() {
       this.$emit('close-dialog');
@@ -59,6 +105,7 @@ export default {
       this.sessionHeureDebut = ''; // Variable pour stocker la catégorie du site
       this.sessionHeureFin = '';
       this.discipline = '';
+      this.epreuve ='';
       this.site = '';
       this.description = '';
       this.sessionType = '';
@@ -70,6 +117,7 @@ export default {
         sessionHeureDebut: this.sessionHeureDebut,
         sessionHeureFin: this.sessionHeureFin,
         discipline: this.discipline,
+        epreuveName: this.epreuve,
         site:this.site,
         description:this.description,
         sessionType:this.sessionType,
@@ -77,6 +125,10 @@ export default {
       this.closeDialog();
     },
   },
+  mounted() {
+    this.fetchDisciplines();
+    this.fetchSites();
+  }
 }
 </script>
 

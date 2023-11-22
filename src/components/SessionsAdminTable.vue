@@ -31,6 +31,7 @@
 
 <script>
 import SessionsAdminDialog from "@/components/SessionsAdminDialog.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -79,49 +80,77 @@ export default {
     }
   },
   methods: {
-    updateSelectedSession(data) { //Doit update l'objet sur l'api et recuperer l'objet update (update l'objet en base sql)
+    updateSelectedSession(data) {
       if (this.selectedSession && this.selectedSession.length > 0) {
         const selectedId = this.selectedSession[0];
-        const index = this.sessions.findIndex(session => session.id === selectedId);
-        console.log(this.sessions.at(index));
-        if (index > -1) {
-          this.sessions.at(index).codeSession = data.sessionCode;
-          this.sessions.at(index).date = data.sessionDate;
-          this.sessions.at(index).heureDebut = data.sessionHeureDebut;
-          this.sessions.at(index).heureFin = data.sessionHeureFin;
-          this.sessions.at(index).disciplineName = data.discipline;
-          this.sessions.at(index).epreuveName = data.epreuveName;
-          this.sessions.at(index).site = data.site;
-          this.sessions.at(index).description = data.description;
-          this.sessions.at(index).typeSession = data.sessionType;
-        }
+
+        const updatedSession = {
+          codeSession: data.sessionCode,
+          date: data.sessionDate,
+          heureDebut: data.sessionHeureDebut,
+          heureFin: data.sessionHeureFin,
+          disciplineName: data.discipline,
+          epreuveName: data.epreuveName,
+          siteName: data.site,
+          description: data.description,
+          typeSession: data.sessionType,
+        };
+
+        axios.put(`http://localhost:3001/session/${selectedId}`, updatedSession)
+            .then(response => {
+              // Mettez à jour la session dans le tableau local avec les nouvelles données
+              const index = this.sessions.findIndex(session => session.id === selectedId);
+              if (index > -1) {
+                this.sessions.splice(index, 1, response.data);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la modification de la session:', error);
+            });
       }
     },
-    createSession(data){
-      const session ={
-        id:100,
-        codeSession : data.code,
-        date : data.date,
-        heureDebut : data.sessionHeureDebut,
-        heureFin : data.sessionHeureFin,
-        disciplineName : data.discipline,
-        epreuveName : data.epreuveName,
-        siteName : data.site,
-        description : data.description,
-        typeSession : data.sessionType,
-      }
-      this.sessions.push(session);
+
+    createSession(data) {
+      const newSession = {
+        codeSession: data.sessionCode,
+        date: data.sessionDate,
+        heureDebut: data.sessionHeureDebut,
+        heureFin: data.sessionHeureFin,
+        disciplineName: data.discipline,
+        epreuveName: data.epreuveName,
+        siteName: data.site,
+        description: data.description,
+        typeSession: data.sessionType,
+      };
+      axios.post('http://localhost:3001/session/create', newSession)
+          .then(response => {
+            // Ajoutez la session retournée par l'API à votre tableau local
+            this.sessions.push(response.data);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la création de la session:', error);
+          });
     },
     deleteSelectedSession() {
       if (this.selectedSession && this.selectedSession.length > 0) {
         const selectedId = this.selectedSession[0];
-        const index = this.sessions.findIndex(session => session.id === selectedId);
-        if (index > -1) {
-          this.sessions.splice(index, 1);
-        }
+
+        axios.delete(`http://localhost:3001/session/${selectedId}`)
+            .then(() => {
+              // Supprimez la session du tableau local
+              const index = this.sessions.findIndex(session => session.id === selectedId);
+              if (index > -1) {
+                this.sessions.splice(index, 1);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la suppression de la session:', error);
+            });
+
+        this.noRowSelected = true;
       }
-      this.noRowSelected = true;
     },
+
     closeDialog() {
       this.dialogCreate = false;
       this.dialogUpdate =false;
