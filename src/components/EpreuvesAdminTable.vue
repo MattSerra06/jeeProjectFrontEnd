@@ -31,6 +31,7 @@
 
 <script>
 import EpreuvesAdminDialog from './EpreuvesAdminDialog.vue';
+import axios from "axios";
 export default {
   components: {
     'epreuves-admin-dialog': EpreuvesAdminDialog,
@@ -72,34 +73,62 @@ export default {
       this.dialogCreate = false;
       this.dialogUpdate = false;
     },
-    updateSelectedEpreuve(data) { //Doit update l'objet sur l'api et recuperer l'objet update (update l'objet en base sql)
+    updateSelectedEpreuve(data) {
       if (this.selectedEpreuve && this.selectedEpreuve.length > 0) {
         const selectedId = this.selectedEpreuve[0];
-        const index = this.epreuves.findIndex(epreuve => epreuve.id === selectedId);
-        if (index > -1) {
-          this.epreuves.at(index).disciplineNom = data.disciplineName;
-          this.epreuves.at(index).nom = data.epreuveName;
-        }
+
+        const updatedEpreuve = {
+          disciplineNom: data.disciplineName,
+          nom: data.epreuveName,
+        };
+
+        axios.put(`http://localhost:3001/epreuve/${selectedId}`, updatedEpreuve)
+            .then(response => {
+              // Mettez à jour l'épreuve dans le tableau local avec les nouvelles données
+              const index = this.epreuves.findIndex(epreuve => epreuve.id === selectedId);
+              if (index > -1) {
+                this.epreuves.splice(index, 1, response.data);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la modification de l\'épreuve:', error);
+            });
       }
     },
-    createEpreuve(data) { //Doit créer l'objet sur l'api et recuperer l'objet créer (l'id genere par la base sql)
-      const epreuve = {
-        id: 100,
+
+    createEpreuve(data) {
+      const newEpreuve = {
         disciplineNom: data.disciplineName,
-        nom:data.epreuveName,
+        nom: data.epreuveName,
       };
-      this.epreuves.push(epreuve);
+      axios.post('http://localhost:3001/epreuve/create', newEpreuve)
+          .then(response => {
+            this.epreuves.push(response.data);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la création de l\'épreuve:', error);
+          });
     },
     deleteSelectedEpreuve() {
       if (this.selectedEpreuve && this.selectedEpreuve.length > 0) {
         const selectedId = this.selectedEpreuve[0];
-        const index = this.epreuves.findIndex(epreuve => epreuve.id === selectedId);
-        if (index > -1) {
-          this.epreuves.splice(index, 1);
-        }
+
+        axios.delete(`http://localhost:3001/epreuve/${selectedId}`)
+            .then(() => {
+              // Supprimez l'épreuve du tableau local
+              const index = this.epreuves.findIndex(epreuve => epreuve.id === selectedId);
+              if (index > -1) {
+                this.epreuves.splice(index, 1);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la suppression de l\'épreuve:', error);
+            });
+
+        this.noRowSelected = true;
       }
-      this.noRowSelected = true;
     },
+
   }
 }
 </script>

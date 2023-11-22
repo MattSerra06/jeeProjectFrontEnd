@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     dialogTitle: {
@@ -30,10 +32,23 @@ export default {
     return {
       disciplineName: '', // Variable pour stocker le nom du site
       epreuveName: '', // Variable pour stocker la ville du site
-      disciplines : ['Natation','Athlétisme'],
+      disciplines : [],
     };
   },
+  mounted() {
+    this.fetchDisciplines();
+  },
   methods: {
+    fetchDisciplines() {
+      axios.get('http://localhost:3001/discipline')
+          .then(response => {
+            // Stockez uniquement les noms des disciplines dans le tableau
+            this.disciplines = response.data.map(discipline => discipline.nom);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des disciplines:', error);
+          });
+    },
     // Émettre un événement pour fermer le dialogue
     closeDialog() {
       this.$emit('close-dialog');
