@@ -84,8 +84,6 @@ export default {
       axios.get('http://localhost:3001/discipline')
           .then(response => {
             this.disciplines = response.data;
-            console.log(this.disciplines);
-            console.log(response.data);
           })
           .catch(error => {
             console.error('Erreur lors du chargement des sites:', error);
@@ -93,8 +91,6 @@ export default {
       axios.get('http://localhost:3001/epreuve')
           .then(response => {
             this.epreuves = response.data;
-            console.log(this.epreuves);
-            console.log(response.data);
           })
           .catch(error => {
             console.error('Erreur lors du chargement des sites:', error);

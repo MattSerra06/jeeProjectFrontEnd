@@ -34,6 +34,7 @@
 
 import 'vuetify/dist/vuetify.min.css';
 import SitesAdminDialog from './SitesAdminDialog.vue';
+import axios from "axios";
 
 export default {
   components: {
@@ -73,33 +74,58 @@ export default {
     }
   },
   methods: {
-    updateSelectedSite(data) { //Doit update l'objet sur l'api et recuperer l'objet update (update l'objet en base sql)
+    updateSelectedSite(data) {
+      console.log(data);
       if (this.selectedSite && this.selectedSite.length > 0) {
         const selectedId = this.selectedSite[0];
         const index = this.sites.findIndex(site => site.id === selectedId);
-        console.log(this.sites.at(index));
         if (index > -1) {
-          this.sites.at(index).nom = data.siteName;
-          this.sites.at(index).ville = data.siteCity;
-          this.sites.at(index).categorie = data.siteCategory;
+          const newSite = {
+            nom: data.siteName,
+            ville: data.siteCity,
+            categorie: data.siteCategory.toUpperCase().replace(/\s+/g, '_')
+          };
+          axios.put('http://localhost:3001/site/'+selectedId, newSite)
+              .then(response => {
+                this.sites.at(index).nom=response.data.nom;
+                this.sites.at(index).ville=response.data.ville;
+                this.sites.at(index).categorie=response.data.categorie;
+              })
+              .catch(error => {
+                console.error('Erreur lors de la création du site:', error);
+              });
         }
       }
     },
-    createSite(data) { //Doit créer l'objet sur l'api et recuperer l'objet créer (l'id genere par la base sql)
-      const site = {
-        id: 100,
+
+    createSite(data) {
+      const newSite = {
         nom: data.siteName,
         ville: data.siteCity,
-        categorie: data.siteCategory
+        categorie: data.siteCategory.toUpperCase().replace(/\s+/g, '_')
       };
-      this.sites.push(site);
+      axios.post('http://localhost:3001/site/create', newSite)
+          .then(response => {
+            this.sites.push(response.data)
+          })
+          .catch(error => {
+            console.error('Erreur lors de la création du site:', error);
+          });
   },
+
   deleteSelectedSite() {
     if (this.selectedSite && this.selectedSite.length > 0) {
       const selectedId = this.selectedSite[0];
       const index = this.sites.findIndex(site => site.id === selectedId);
       if (index > -1) {
-        this.sites.splice(index, 1);
+        axios.delete(`http://localhost:3001/site/${selectedId}`)
+            .then(() => {
+              // Supprimer le site de la liste des sites après la suppression réussie
+              this.sites.splice(index, 1);
+            })
+            .catch(error => {
+              console.error('Erreur lors de la suppression du site:', error);
+            });
       }
     }
     this.noRowSelected = true;

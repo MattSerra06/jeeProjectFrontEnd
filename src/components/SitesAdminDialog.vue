@@ -20,6 +20,9 @@
 </template>
 
 <script>
+
+import axios from 'axios'; // Assurez-vous qu'Axios est importé
+
 export default {
   props: {
     dialogTitle: {
