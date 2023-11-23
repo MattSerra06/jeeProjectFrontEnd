@@ -2,7 +2,7 @@
   <div id="app">
     <!-- En-tête global -->
     <v-app>
-      <notifications />
+      <notifications position="bottom right"/>
       <navigation-drawer v-model="drawerVisible" @close="toggleDrawer"></navigation-drawer>
       <app-bar @toggle-drawer="toggleDrawer"></app-bar>
       <!-- Contenu de la page actuelle (chargé via <router-view>) -->

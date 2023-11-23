@@ -93,7 +93,11 @@ export default {
             this.$router.push('/');
             EventBus.login();
 
-            console.log(`Connexion réussie, bienvenue ${firstName} ${lastName}`);
+            this.$notify({
+              type : 'success',
+              title: 'Compte crée',
+              text: 'Vous etes maintenant connecté'
+            });
           })
           .catch(error => {
             console.error('Erreur lors de la création du compte:', error);

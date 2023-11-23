@@ -5,10 +5,10 @@
         color="deep-purple-accent-4"
         align-tabs="center"
     >
-      <v-tab :value="1">Sites</v-tab>
-      <v-tab :value="2">Sessions</v-tab>
-      <v-tab :value="3">Disciplines</v-tab>
-      <v-tab :value="4">Epreuves</v-tab>
+      <v-tab v-if="isAdmin || isAdministrativeManager" :value="1">Sites</v-tab>
+      <v-tab v-if="isAdmin || isSessionManager" :value="2">Sessions</v-tab>
+      <v-tab v-if="isAdmin || isAdministrativeManager" :value="3">Disciplines</v-tab>
+      <v-tab v-if="isAdmin || isAdministrativeManager" :value="4">Epreuves</v-tab>
     </v-tabs>
     <v-tab-item v-if="tab === 1">
       <v-card>
@@ -97,6 +97,18 @@ export default {
           });
     },
   },
+  computed: {
+    isAdmin() {
+      return localStorage.getItem('role') === 'ROLE_ADMIN';
+    },
+    isAdministrativeManager() {
+      return localStorage.getItem('role') === 'ROLE_ADMINISTRATIVE_MANAGER';
+    },
+    isSessionManager() {
+      return localStorage.getItem('role') ==='ROLE_SESSION_MANAGER'
+    }
+  },
+
   mounted() {
     this.loadSites();
   },

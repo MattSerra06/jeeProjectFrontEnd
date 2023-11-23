@@ -83,7 +83,7 @@ export default {
             EventBus.login(role);
 
             this.$notify({
-              group: 'auth',
+              type : 'success',
               title: 'Connexion réussi',
               text: 'Vous etes maintenant connecté'
             });

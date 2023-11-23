@@ -10,6 +10,7 @@ import * as directives from 'vuetify/directives'
 import * as labsComponents from 'vuetify/labs/components'
 import axios from 'axios';
 import Notifications from '@kyvg/vue3-notification'
+import {notifyUser} from "@/notification";
 
 
 const vuetify = createVuetify({
@@ -29,12 +30,7 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(response => response, error => {
     if (error.response.status === 401) {
         this.$router.push('/login');
-        app.config.globalProperties.$notify({
-            group: 'auth',
-            type: 'error',
-            title: 'Session Expirée',
-            text: 'Votre session a expiré. Veuillez vous reconnecter.'
-        });
+        notifyUser('error', 'Session Expirée', 'Votre session a expiré. Veuillez vous reconnecter.');
     }
     return Promise.reject(error);
 });

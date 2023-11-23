@@ -7,6 +7,7 @@ import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
 import Sites from "@/pages/Sites.vue";
 import Discipline from "@/pages/Discipline.vue";
+import {notifyUser} from "@/notification";
 
 
 const routes = [
@@ -40,7 +41,7 @@ router.beforeEach((to, from, next) => {
         const requiredRoles = to.meta.requiredRoles;
 
         if (!requiredRoles.includes(userRole)) {
-            // Rediriger l'utilisateur si le rôle n'est pas autorisé
+            notifyUser('error', 'Accès refusé', 'Vous n\'avez pas les permissions pour accéder à cette page');
             return next({ path: '/' }); // Rediriger vers l'accueil ou une page d'erreur
         }
     }
