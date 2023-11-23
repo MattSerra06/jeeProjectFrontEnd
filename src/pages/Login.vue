@@ -41,6 +41,10 @@
 </template>
 
 <script>
+import axios from "axios";
+import { EventBus } from '@/eventBus';
+
+
 export default {
   data() {
     return {
@@ -59,9 +63,31 @@ export default {
       }
     },
     submitLogin() {
-      // Ici, vous traiterez la connexion, par exemple en appelant une API.
-      console.log('Tentative de connexion avec:', this.login);
+      const credentials = {
+        username: this.login.username,
+        password: this.login.password
+      };
+
+      axios.post('http://localhost:3001/auth/signin', credentials)
+          .then(response => {
+            const { token, firstName, lastName } = response.data;
+
+            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('firstName', firstName);
+            localStorage.setItem('lastName', lastName);
+
+            this.login.username = '';
+            this.login.password = '';
+            this.$router.push('/');
+            EventBus.login();
+
+            console.log(`Connexion réussie, bienvenue ${firstName} ${lastName}`);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la connexion:', error);
+          });
     },
+
     redirectToRegister() {
       // Redirection vers la page d'inscription (à implémenter avec le routeur Vue)
       this.$router.push('/register');

@@ -29,7 +29,6 @@ export default {
   methods: {
     toggleDrawer() {
       this.drawerVisible = !this.drawerVisible;// Inverse la visibilité du tiroir de navigation
-      console.log(this.drawerVisible);
     },
   },
 };
