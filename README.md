@@ -15,6 +15,11 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 ```sh
 npm install
 ```
+### Need :
+```sh
+npm version > 8 et node version 18.17.0
+Tester et fonctionnel avec npm 10.1.0 et node 20.9.0
+```
 
 ### Compile and Hot-Reload for Development
 

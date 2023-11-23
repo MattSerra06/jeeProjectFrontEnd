@@ -68,7 +68,6 @@ export default {
         username: this.login.username,
         password: this.login.password
       };
-
       axios.post('http://localhost:3001/auth/signin', credentials)
           .then(response => {
             const { token, firstName, lastName , role} = response.data;

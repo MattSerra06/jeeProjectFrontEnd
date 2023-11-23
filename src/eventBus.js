@@ -18,7 +18,7 @@ export const EventBus = {
     initializeAuthState: () => {
         const token = localStorage.getItem('jwtToken');
         if (token) {
-            const role = localStorage.getItem('role'); // Assurez-vous que le rôle est également stocké dans le localStorage
+            const role = localStorage.getItem('role');
             EventBus.login(role);
         }
     }
