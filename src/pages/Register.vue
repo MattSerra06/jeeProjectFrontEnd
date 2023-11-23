@@ -52,6 +52,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import {EventBus} from "@/eventBus";
+
 export default {
   data() {
     return {
@@ -68,9 +71,33 @@ export default {
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
-    submitRegistration() {
-      // Ici, vous traiterez l'inscription, par exemple en appelant une API.
-      console.log('Tentative de création de compte avec:', this.register);
+    submitRegistration() {const credentials = {
+      firstName: this.register.firstName,
+      lastName : this.register.lastName,
+      username: this.register.username,
+      password: this.register.password,
+    };
+
+      axios.post('http://localhost:3001/auth/signup', credentials)
+          .then(response => {
+            const { token, firstName, lastName, role } = response.data;
+
+            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('firstName', firstName);
+            localStorage.setItem('lastName', lastName);
+            localStorage.setItem('role', role);
+
+
+            this.register.username = '';
+            this.register.password = '';
+            this.$router.push('/');
+            EventBus.login();
+
+            console.log(`Connexion réussie, bienvenue ${firstName} ${lastName}`);
+          })
+          .catch(error => {
+            console.error('Erreur lors de la création du compte:', error);
+          });
     },
     redirectToLogin() {
       // Redirection vers la page de connexion (à implémenter avec le routeur Vue)

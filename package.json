@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^3.0.2",
     "@mdi/font": "^7.3.67",
     "axios": "^1.6.0",
     "cors": "^2.8.5",

@@ -7,7 +7,7 @@
           <v-list-item v-if="!isLoggedIn" prepend-icon="mdi-account-arrow-up" title="Connexion" value="login" @click="closeDialog"></v-list-item>
         </router-link>
         <router-link to="/admin" class="nav-link">
-          <v-list-item prepend-icon="mdi-wrench" title="Administration" value="admin" @click="closeDialog"></v-list-item>
+          <v-list-item v-if="isAdmin" prepend-icon="mdi-wrench" title="Administration" value="admin" @click="closeDialog"></v-list-item>
         </router-link>
     </v-list>
     <template v-slot:append>
@@ -34,6 +34,10 @@ export default {
       const lastName = localStorage.getItem('lastName');
       this.userFullName = firstName && lastName ? `${firstName} ${lastName}` : '';
       return EventBus.getState().isLoggedIn;
+    },
+    isAdmin() {
+      const rolesAllowed = ['ROLE_ADMIN', 'ROLE_ADMINISTRATIVE_MANAGER', 'ROLE_SESSION_MANAGER'];
+      return rolesAllowed.includes(EventBus.getState().userRole);
     },
   },
   methods: {

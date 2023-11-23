@@ -43,6 +43,7 @@
 <script>
 import axios from "axios";
 import { EventBus } from '@/eventBus';
+import app from "@/App.vue";
 
 
 export default {
@@ -70,18 +71,22 @@ export default {
 
       axios.post('http://localhost:3001/auth/signin', credentials)
           .then(response => {
-            const { token, firstName, lastName } = response.data;
-
+            const { token, firstName, lastName , role} = response.data;
             localStorage.setItem('jwtToken', token);
             localStorage.setItem('firstName', firstName);
             localStorage.setItem('lastName', lastName);
+            localStorage.setItem('role', role);
 
             this.login.username = '';
             this.login.password = '';
             this.$router.push('/');
-            EventBus.login();
+            EventBus.login(role);
 
-            console.log(`Connexion réussie, bienvenue ${firstName} ${lastName}`);
+            this.$notify({
+              group: 'auth',
+              title: 'Connexion réussi',
+              text: 'Vous etes maintenant connecté'
+            });
           })
           .catch(error => {
             console.error('Erreur lors de la connexion:', error);
