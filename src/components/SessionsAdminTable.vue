@@ -128,7 +128,11 @@ export default {
             this.sessions.push(response.data);
           })
           .catch(error => {
-            console.error('Erreur lors de la création de la session:', error);
+            this.$notify({
+              type : 'error',
+              title: 'Recouvrement entre 2 sessions',
+              text: 'Il y a déjà une session sur ce créneau horaire pour cette discipline'
+            });
           });
     },
     deleteSelectedSession() {

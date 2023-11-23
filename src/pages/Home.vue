@@ -6,6 +6,7 @@
 
 <script>
 import Carousel from "@/components/Carousel.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -13,13 +14,25 @@ export default {
   },
   data() {
     return {
-      carouselItems: [
-        {text: "Site 1"},
-        {text: "Site 2"},
-        {text: "Site 3"},
-      ],
+      carouselItems: [],
     };
   },
+  methods: {
+    fetchSites() {
+      axios.get('http://localhost:3001/stats/sites') // Remplacez par votre URL de serveur et port
+          .then(response => {
+            this.carouselItems = response.data.map(([site, sessionCount]) =>
+                `${site.nom}: ${sessionCount} sessions`);
+            console.log(this.carouselItems);
+          })
+          .catch(error => {
+            console.error("Erreur lors de la récupération des sites: ", error);
+          });
+    }
+  },
+  mounted() {
+    this.fetchSites();
+  }
 };
 </script>
 

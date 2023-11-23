@@ -35,7 +35,7 @@ export default {
             this.sessions = response.data;
           })
           .catch(error => {
-            console.error('Erreur lors du chargement des sites:', error);
+            console.error('Erreur lors du chargement des sessions:', error);
           });
       axios.get('http://localhost:3001/discipline') // Remplacez par l'URL de votre API
           .then(response => {
