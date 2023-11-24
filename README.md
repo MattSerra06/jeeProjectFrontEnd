@@ -10,6 +10,14 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
+## Compte admin :
+```sh
+username : admin ;  mot de passe : admin
+username : gestionnaire_administratif ;  mot de passe : gestionnaire_administratif
+username : gestionnaire_sessions ;  mot de passe : gestionnaire_sessions
+```
+
+
 ## Project Setup
 
 ```sh
